@@ -1,20 +1,6 @@
-//-----------------keypad module for decimal to bcd conversion----------------
-module keypad(i1,i2,i3,i4,i5,i6,i7,i8,i9,i0,open,clear,set,bcd,pressed);
-  input i1,i2,i3,i4,i5,i6,i7,i8,i9,i0,open,clear,set;
-  output [3:0]bcd;
-  output pressed;
-  assign bcd[3] = i8 || i9;
-  assign bcd[2] = i4 || i5 || i6 || i7;
-  assign bcd[1] = i2 || i3 || i6 || i7;
-  assign bcd[0] = i1 || i3 || i5 || i7 || i9;
-  assign pressed = i1||i2||i3||i4||i5||i6||i0||i9||i8||i7||clear;
-endmodule
-
-
-
 //-------------top module-----------------------------------------
-module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET);
-  input I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,RESET;
+module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET,CLK);
+  input I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,RESET,CLK;
   output reg LOCK;
   wire[3:0] BCD; //bcd from keypad
   reg address; //address=0 to store in first memory,address=1 to store in second memory
@@ -24,21 +10,31 @@ module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET);
   reg [3:0] digit2; //second digit
   reg [3:0] pwd1; //first digit of password
   reg [3:0] pwd2; //second digit of password
+  reg r_p;
   wire EQ; //EQ=1 if password = entered value
-  
+  reg change;
  
   
 //------instantiating keypad module------------------------
-  keypad k1(  
-    .i1(I1),.i2(I2),.i3(I3),.i4(I4),.i5(I5),        		 
-    .i6(I6),.i7(I7),.i8(I8),.i9(I9),.i0(I0),.open(OPEN),
-    .clear(CLOSE),.set(SET),.bcd(BCD),.pressed(p)
-     );
+  assign BCD[3] = I8 || I9;
+  assign BCD[2] = I4 || I5 || I6 || I7;
+  assign BCD[1] = I2 || I3 || I6 || I7;
+  assign BCD[0] = I1 || I3 || I5 || I7 || I9;
+  assign p = I1||I2||I3||I4||I5||I6||I0||I9||I8||I7;
   
+  always @(posedge CLK)
+    begin
+      r_p <= p;//r_p stores 1 when p is pressed
+      if(r_p != p) //when p is pressed p = 1 then for a very small time r_p is 0 and p is 1.So then the change = 1 and p = 1 and bcd is stored.
+        change <= 1'b1;
+      else
+        change <= 1'b0;
+
+    end
   
 
 //resets password to 0 if 'RESET' pressed or stores bcd from keypad if 'RESET' not pressed
-  always @(posedge p or posedge RESET) 
+  always @(posedge CLK) 
     begin
       if(RESET)
         begin
@@ -46,7 +42,7 @@ module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET);
           pwd1 <= 0;
           pwd2 <= 0;
         end
-      else
+      else if(change&p)
         begin
           if(!address)
             begin
@@ -70,27 +66,28 @@ module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET);
   
   
   //sets new password 
-  always @(posedge setpassword)
-    begin
-      pwd1 <= digit1;
-      pwd2 <= digit2;
-    end
+  always @(posedge CLK)
+    if(setpassword)
+      begin
+        pwd1 <= digit1;
+        pwd2 <= digit2;
+      end
   
   
   //open LOCK(LOCK=1) if 'OPEN' PRESSED  OR  RESETS LOCK AND KEYPAD MEMORY TO 0 IF 'CLOSE' PRESSED
-  always @(posedge OPEN or posedge CLOSE)
+  always @(posedge CLK)
     begin
       if(CLOSE)
         begin
           LOCK <= 0;
           digit1 <= 0;
           digit2 <= 0;
+          address <= 0;
         end
-      else
+      else if(OPEN)
         LOCK <= EQ;
     end
 endmodule
-  
   
   
           
