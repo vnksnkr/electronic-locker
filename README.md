@@ -4,3 +4,4 @@ A minimal electronic locker accessible using an 8 bit password implemented using
 Circuit Implementation :
 The circuit was developed without code using ![CircuitVerse](https://circuitverse.org/simulator/embed/lcd_experiment_1-bff6d523-f143-413a-90fe-e004713c1769)
 
+![](https://i.imgur.com/WV4aXhp.gif)
