@@ -1,7 +1,15 @@
+// CHANGE DISPLAY PARAMETERS INCLUDE BOTH PASSWORD AND SEVEN SEGMENT
 module dlock_tb;
   
   reg T1,T2,T3,T4,T5,T6,T7,T8,T9,T0,O,S,C,R,CLK_T;
   wire L;
+  wire [6:0]d1_seg;
+  wire [6:0]d2_seg;
+  wire [6:0]d3_seg;
+  wire [6:0]p1_seg;
+  wire [6:0]p2_seg;
+  wire [6:0]p3_seg;  
+  
   
   dlock d1(
     .I1(T1),.I2(T2),.I3(T3),
@@ -9,7 +17,9 @@ module dlock_tb;
     .I7(T7),.I8(T8),.I9(T9),
     .I0(T0),.OPEN(O),.CLOSE(C),
     .SET(S),.LOCK(L),.RESET(R),
-    .CLK(CLK_T)
+    .CLK(CLK_T),.d1_seg(d1_seg),
+    .d2_seg(d2_seg),
+    .d3_seg(d3_seg)
   );
   
   initial begin
@@ -38,7 +48,7 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b1;
     #10;
-    $display("PRESSING RESET BUTTON\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("PRESSING RESET BUTTON\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
 // ---------------------------------RELEASING RESET BUTTON-------------------------------------------   
     #10;
@@ -57,12 +67,13 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b\n",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);  
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+  
     
 //--------------------------TEST WHEN CORRECT PASSWORD ENTERED-----------------------------------------   
 //-----------------------------------------------------------------------------------------------------
     
-    $display("TEST WHEN CORRECT PASSWORD ENTERED");
+    $display("\nTEST WHEN CORRECT PASSWORD ENTERED");
 //-------------------------------ENTERING FIRST DIGIT TO CHECK PASSWORD-----------------------------    
     #10;
     T1 = 1'b0;
@@ -80,7 +91,7 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("ENTERING FIRST DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("ENTERING FIRST DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
 //----------------------------RELEASING BUTTON OF FIRST DIGIT--------------------------------------    
     
@@ -100,7 +111,7 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
 //--------------------------------ENTERING SECOND DIGIT-----------------------------------------    
     #10;
@@ -119,8 +130,7 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("ENTERING SECOND DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-      
+    $display("\nENTERING SECOND DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
 //------------------------------RELEASING BUTTON OF SECOND DIGIT---------------------------------    
     #10;
     T1 = 1'b0;
@@ -138,10 +148,10 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
     
-//------------------------PRESSING OPEN BUTTON---------------------------------------------    
+//--------------------------------ENTERING THIRD DIGIT-----------------------------------------    
     #10;
     T1 = 1'b0;
     T2 = 1'b0;
@@ -152,16 +162,15 @@ module dlock_tb;
     T7 = 1'b0;
     T8 = 1'b0;
     T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b1;
+    T0 = 1'b1;
+    O  = 1'b0;
     S  = 1'b0;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("PRESSING OPEN BUTTON TO OPEN LOCK\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-    
-//---------------------------------RELEASING OPEN BUTTON----------------------------------    
+    $display("\nENTERING THIRD DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+      
+//------------------------------RELEASING BUTTON OF THIRD DIGIT---------------------------------    
     #10;
     T1 = 1'b0;
     T2 = 1'b0;
@@ -177,10 +186,94 @@ module dlock_tb;
     S  = 1'b0;
     C  = 1'b0;
     R  = 1'b0;    
-    #5;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    #10;
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+//-------------------------PRESSING OPEN BUTTON--------------------------------
+    $display("\nPressing OPEN Button");
+        #10;
+    T1 = 1'b0;
+    T2 = 1'b0;
+    T3 = 1'b0;
+    T4 = 1'b0;
+    T5 = 1'b0;
+    T6 = 1'b0;
+    T7 = 1'b0;
+    T8 = 1'b0;
+    T9 = 1'b0;
+    T0 = 1'b0;
+    O  = 1'b1;
+    S  = 1'b0;
+    C  = 1'b0;
+    R  = 1'b0;    
+    #10;
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
-//-------------------ENTERING FIRST DIGIT OF NEW PASSWORD--------------------------------------------    
+    
+//-----------------------RELEASING OPEN BUTTON---------------------------------
+     #10;
+    T1 = 1'b0;
+    T2 = 1'b0;
+    T3 = 1'b0;
+    T4 = 1'b0;
+    T5 = 1'b0;
+    T6 = 1'b0;
+    T7 = 1'b0;
+    T8 = 1'b0;
+    T9 = 1'b0;
+    T0 = 1'b0;
+    O  = 1'b0;
+    S  = 1'b0;
+    C  = 1'b0;
+    R  = 1'b0;    
+    #10;
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+    
+    
+    
+//--------------------------SET NEW PASSWORD-----------------------------------------   
+//-----------------------------------------------------------------------------------------------------
+    
+    $display("\nSET NEW PASSWORD");
+//-------------------------------ENTERING FIRST DIGIT-----------------------------    
+    #10;
+    T1 = 1'b1;
+    T2 = 1'b0;
+    T3 = 1'b0;
+    T4 = 1'b0;
+    T5 = 1'b0;
+    T6 = 1'b0;
+    T7 = 1'b0;
+    T8 = 1'b0;
+    T9 = 1'b0;
+    T0 = 1'b0;
+    O  = 1'b0;
+    S  = 1'b0;
+    C  = 1'b0;
+    R  = 1'b0;    
+    #10;
+    $display("ENTERING FIRST DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+    
+//----------------------------RELEASING BUTTON OF FIRST DIGIT--------------------------------------    
+    
+    #10;
+    T1 = 1'b0;
+    T2 = 1'b0;
+    T3 = 1'b0;
+    T4 = 1'b0;
+    T5 = 1'b0;
+    T6 = 1'b0;
+    T7 = 1'b0;
+    T8 = 1'b0;
+    T9 = 1'b0;
+    T0 = 1'b0;
+    O  = 1'b0;
+    S  = 1'b0;
+    C  = 1'b0;
+    R  = 1'b0;    
+    #10;
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+    
+//--------------------------------ENTERING SECOND DIGIT-----------------------------------------    
     #10;
     T1 = 1'b0;
     T2 = 1'b1;
@@ -197,10 +290,8 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("ENTERING FIRST DIGIT OF NEW PASSWORD\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-    
-//---------------------RELEASING BUTTON-------------------------------------------    
+    $display("\nENTERING SECOND DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+//------------------------------RELEASING BUTTON OF SECOND DIGIT---------------------------------    
     #10;
     T1 = 1'b0;
     T2 = 1'b0;
@@ -217,15 +308,15 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
-//-----------------ENTERING SECOND DIGIT------------------------------    
+//--------------------------------ENTERING THIRD DIGIT-----------------------------------------    
     #10;
     T1 = 1'b0;
     T2 = 1'b0;
-    T3 = 1'b0;
+    T3 = 1'b1;
     T4 = 1'b0;
-    T5 = 1'b1;
+    T5 = 1'b0;
     T6 = 1'b0;
     T7 = 1'b0;
     T8 = 1'b0;
@@ -236,9 +327,9 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("ENETERING SECOND DIGIT OF NEW PASSWORD\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-//------------------------------RELEASING BUTTON---------------------------------------    
+    $display("\nENTERING THIRD DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+      
+//------------------------------RELEASING BUTTON OF THIRD DIGIT---------------------------------    
     #10;
     T1 = 1'b0;
     T2 = 1'b0;
@@ -255,11 +346,11 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
-    
-//---------------------------PRESSING SET PASSWORD BUTTON------------------------------------    
-    #10;
+//----------------------------ENTERING SET BUTTON--------------------------------------------------------- 
+    $display("\nPressing SET button");
+     #10;
     T1 = 1'b0;
     T2 = 1'b0;
     T3 = 1'b0;
@@ -275,11 +366,11 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("PRESSING SET PASSWORD BUTTON\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
     
-//----------------------RELEASING BUTTON--------------------------------------------    
-    #10;
+//----------------------------RELEASING SET BUTTON--------------------------------------------------------- 
+     #10;
     T1 = 1'b0;
     T2 = 1'b0;
     T3 = 1'b0;
@@ -295,11 +386,12 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
     
-//----------------------PRESSING CLOSE BUTTON--------------------------------------------------    
-    #10;
+//----------------------------PRESSING CLOSE BUTTON--------------------------------------------------------- 
+    $display("\nPressing CLOSE button");
+     #10;
     T1 = 1'b0;
     T2 = 1'b0;
     T3 = 1'b0;
@@ -315,12 +407,11 @@ module dlock_tb;
     C  = 1'b1;
     R  = 1'b0;    
     #10;
-    $display("PRESSING CLOSE BUTTON\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
     
-    
-//-----------------------RELEASING BUTTON--------------------------------------------------------------    
-    #10;
+//----------------------------RELEASING CLOSE BUTTON--------------------------------------------------------- 
+     #10;
     T1 = 1'b0;
     T2 = 1'b0;
     T3 = 1'b0;
@@ -336,14 +427,29 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+       
+    
+    
+    
+
 
     
     
     
-//--------------------------TEST WHEN WRONG PASSWORD ENTERED------------------------------------------    
     
-    $display("\nTEST WHEN WRONG PASSWORD ENTERED");        
+
+    
+    
+    
+    
+    
+    
+    
+//--------------------------TEST WHEN INCORRECT PASSWORD ENTERED-----------------------------------------   
+//-----------------------------------------------------------------------------------------------------
+    
+    $display("\n\nTEST WHEN INCORRECT PASSWORD ENTERED");
 //-------------------------------ENTERING FIRST DIGIT TO CHECK PASSWORD-----------------------------    
     #10;
     T1 = 1'b0;
@@ -361,7 +467,7 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("ENTERING FIRST DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("ENTERING FIRST DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
 //----------------------------RELEASING BUTTON OF FIRST DIGIT--------------------------------------    
     
@@ -381,7 +487,7 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
 //--------------------------------ENTERING SECOND DIGIT-----------------------------------------    
     #10;
@@ -400,8 +506,7 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("ENTERING SECOND DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-      
+    $display("\nENTERING SECOND DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
 //------------------------------RELEASING BUTTON OF SECOND DIGIT---------------------------------    
     #10;
     T1 = 1'b0;
@@ -419,11 +524,49 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
     
-//------------------------PRESSING OPEN BUTTON---------------------------------------------    
+//--------------------------------ENTERING THIRD DIGIT-----------------------------------------    
     #10;
+    T1 = 1'b0;
+    T2 = 1'b0;
+    T3 = 1'b0;
+    T4 = 1'b0;
+    T5 = 1'b0;
+    T6 = 1'b0;
+    T7 = 1'b0;
+    T8 = 1'b0;
+    T9 = 1'b0;
+    T0 = 1'b1;
+    O  = 1'b0;
+    S  = 1'b0;
+    C  = 1'b0;
+    R  = 1'b0;    
+    #10;
+    $display("\nENTERING THIRD DIGIT\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+      
+//------------------------------RELEASING BUTTON OF THIRD DIGIT---------------------------------    
+    #10;
+    T1 = 1'b0;
+    T2 = 1'b0;
+    T3 = 1'b0;
+    T4 = 1'b0;
+    T5 = 1'b0;
+    T6 = 1'b0;
+    T7 = 1'b0;
+    T8 = 1'b0;
+    T9 = 1'b0;
+    T0 = 1'b0;
+    O  = 1'b0;
+    S  = 1'b0;
+    C  = 1'b0;
+    R  = 1'b0;    
+    #10;
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
+//-------------------------PRESSING OPEN BUTTON--------------------------------
+    $display("\nPressing OPEN Button");
+        #10;
     T1 = 1'b0;
     T2 = 1'b0;
     T3 = 1'b0;
@@ -439,11 +582,11 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("PRESSING OPEN BUTTON TO OPEN LOCK\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});
     
     
-//---------------------------------RELEASING OPEN BUTTON----------------------------------    
-    #10;
+//-----------------------RELEASING OPEN BUTTON---------------------------------
+     #10;
     T1 = 1'b0;
     T2 = 1'b0;
     T3 = 1'b0;
@@ -459,167 +602,12 @@ module dlock_tb;
     C  = 1'b0;
     R  = 1'b0;    
     #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-//-------------------ENTERING FIRST DIGIT OF NEW PASSWORD--------------------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b1;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b0;
-    C  = 1'b0;
-    R  = 1'b0;    
-    #10;
-    $display("ENTERING FIRST DIGIT OF NEW PASSWORD\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
+    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%12b, PASSWORD:%12b,EQUAL:%b, LOCK:%b SEVEN SEGMENT:%21b",R,O,C,S,{d1.digit1,d1.digit2,d1.digit3},{d1.pwd1,d1.pwd2,d1.pwd3},d1.EQ,L,{d1_seg,d2_seg,d3_seg});    
     
     
-//---------------------RELEASING BUTTON-------------------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b0;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b0;
-    C  = 1'b0;
-    R  = 1'b0;    
-    #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-//-----------------ENTERING SECOND DIGIT------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b1;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b0;
-    C  = 1'b0;
-    R  = 1'b0;    
-    #10;
-    $display("ENETERING SECOND DIGIT OF NEW PASSWORD\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-//------------------------------RELEASING BUTTON---------------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b0;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b0;
-    C  = 1'b0;
-    R  = 1'b0;    
-    #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-    
-//---------------------------PRESSING SET PASSWORD BUTTON------------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b0;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b1;
-    C  = 1'b0;
-    R  = 1'b0;    
-    #10;
-    $display("PRESSING SET PASSWORD BUTTON\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-    
-//----------------------RELEASING BUTTON--------------------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b0;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b0;
-    C  = 1'b0;
-    R  = 1'b0;    
-    #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-    
-//----------------------PRESSING CLOSE BUTTON--------------------------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b0;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b0;
-    C  = 1'b1;
-    R  = 1'b0;    
-    #10;
-    $display("PRESSING CLOSE BUTTON\nRESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);
-    
-    
-    
-//-----------------------RELEASING BUTTON--------------------------------------------------------------    
-    #10;
-    T1 = 1'b0;
-    T2 = 1'b0;
-    T3 = 1'b0;
-    T4 = 1'b0;
-    T5 = 1'b0;
-    T6 = 1'b0;
-    T7 = 1'b0;
-    T8 = 1'b0;
-    T9 = 1'b0;
-    T0 = 1'b0;
-    O  = 1'b0;
-    S  = 1'b0;
-    C  = 1'b0;
-    R  = 1'b0;    
-    #10;
-    $display("RESET :%b, OPEN:%b, CLOSE:%b, SET:%b, KEYPAD:%8b, PASSWORD:%8b,EQUAL:%b, LOCK:%b",R,O,C,S,{d1.digit1,d1.digit2},{d1.pwd1,d1.pwd2},d1.EQ,L);    
     $finish;
     
     
     end 
-endmodule
+endmodule     
+    
