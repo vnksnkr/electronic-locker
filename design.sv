@@ -1,5 +1,5 @@
 // Code your design here
-//----add module for keypad----------------
+//----add module for keypad and seven segment-----------------
 //-------------top module-----------------------------------------
 module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET,CLK,d1_seg,d2_seg,d3_seg);
   input I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,RESET,CLK;
@@ -23,7 +23,7 @@ module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET,CLK,d1_seg,
   reg [3:0] pwd2;   //second digit of password
   reg [3:0] pwd3;   //third  digit of password	
   
-  reg r_p;
+  reg p_old;
   
   wire EQ;          //EQ=1 if password = entered value
   
@@ -49,20 +49,14 @@ module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET,CLK,d1_seg,
   
   
 //-----------to detect the short time when the button is pressed or released so as to store the button value to keypad digit register-------------  
-  always @(posedge CLK)
-    begin
-      r_p <= p;    //r_p stores 1 when p is pressed
-      if(r_p != p) //when p is pressed p = 1 then for a very small time r_p is 0 and p is 1.So then the change = 1 and p = 1 and bcd is stored.
-        change <= 1'b1;
-      else
-        change <= 1'b0;
 
-    end
   
 
 
   always @(posedge CLK) 
     begin
+      p_old <= p; //p_old stores the value of p in a register
+      
       if(RESET)   //resets password to 0 if 'RESET' pressed or stores bcd from keypad if 'RESET' not pressed
         begin
           current_state <= DIGIT_1;
@@ -73,7 +67,9 @@ module dlock(I1,I2,I3,I4,I5,I6,I7,I8,I9,I0,OPEN,CLOSE,SET,LOCK,RESET,CLK,d1_seg,
           digit2 <= 0;
           digit3 <= 0;
         end
-      else if(change&p)
+      
+      
+      else if(p_old != p && p)
         begin
           case(current_state)
             DIGIT_1:begin
@@ -142,6 +138,7 @@ always @(posedge clk)
    endcase
  end
 endmodule
+   
   
   
           
